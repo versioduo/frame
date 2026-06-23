@@ -7,7 +7,7 @@
 #include <V2MIDI.h>
 #include <V2Music.h>
 
-V2DEVICE_METADATA("com.versioduo.frame", 7, "versioduo:samd:strip");
+V2DEVICE_METADATA("com.versioduo.frame", 8, "versioduo:samd:strip");
 
 static V2LED::WS2812 LED(2, PIN_LED_WS2812, &sercom2, SPI_PAD_0_SCK_1, PIO_SERCOM);
 static V2LED::WS2812 LEDExt(256, PIN_LED_WS2812_EXT, &sercom1, SPI_PAD_0_SCK_1, PIO_SERCOM);
@@ -434,17 +434,17 @@ private:
 static class MIDI {
 public:
   void loop() {
-    if (!Device.usb.midi.receive(&_midi))
+    if (!Device.usb.midi.receive(_midi))
       return;
 
-    if (_midi.getPort() != 0)
+    if (_midi.port != 0)
       return;
 
     Device.dispatch(&Device.usb.midi, &_midi);
   }
 
 private:
-  V2MIDI::Packet _midi{};
+  V2MIDI::Packet _midi;
 } MIDI;
 
 static class Button : public V2Buttons::Button {
